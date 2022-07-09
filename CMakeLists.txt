@@ -30,6 +30,7 @@ if(TEST_PLATFORM)
     set(PLATFORM_CORE_SOURCES
         ${CORE_SOURCES}
         src/engine/null/window.c
+        src/engine/null/drawing.c
     )
 endif()
 
@@ -38,6 +39,7 @@ if(PC_PLATFORM)
     set(PLATFORM_CORE_SOURCES
         ${CORE_SOURCES}
         src/engine/pc/window.c
+        src/engine/pc/drawing.c
     )
 endif()
 

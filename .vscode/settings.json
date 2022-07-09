@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "raylib.h": "c"
+    "raylib.h": "c",
+    "window.h": "c",
+    "log.h": "c"
   }
 }
