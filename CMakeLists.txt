@@ -14,7 +14,7 @@ set(TEST_INCLUDES
 )
 
 set(TEST_CFLAGS
-    -g -O0 --std=c++14 -Wno-writable-strings
+    -g -O0 --std=c++14 -Wno-writable-strings -Werror
 )
 
 ## Core library
@@ -45,6 +45,7 @@ endif()
 
 add_library(core STATIC ${PLATFORM_CORE_SOURCES})
 target_include_directories(core PUBLIC ${CORE_INCLUDES})
+target_compile_options(core PRIVATE -Werror)
 
 # Linker settings for PC version
 if(PC_PLATFORM)
