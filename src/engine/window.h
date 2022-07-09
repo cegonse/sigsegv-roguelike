@@ -3,10 +3,12 @@
 struct window_settings {
   int width;
   int height;
+  char *title;
+
+  void (*onDraw)(void);
+  void (*onExit)(void);
 };
 
 typedef struct window Window;
 
-Window *Window_Open(struct window_settings settings);
-
-void Window_Close(Window *self);
+void Window_Open(struct window_settings settings);

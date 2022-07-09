@@ -1,15 +1,20 @@
 #include <stdlib.h>
+#include <raylib/include/raylib.h>
 #include <engine/window.h>
 
-struct window {
-  int placeholder;
-};
-
-Window *Window_Open(struct window_settings settings)
+void Window_Open(struct window_settings settings)
 {
-  return NULL;
-}
+  InitWindow(settings.width, settings.width, settings.title);
+  SetTargetFPS(60);
 
-void Window_Close(Window *self)
-{
+  while (!WindowShouldClose())
+  {
+    settings.onDraw();
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    EndDrawing();
+  }
+
+  settings.onExit();
+  CloseWindow();
 }

@@ -1,6 +1,6 @@
-#include <engine/log.h>
+#include <game/game.h>
 
 int main(int argc, char *argv[]) {
-  Log_Info("Starting game :D");
+  Game_Run();
   return 0;
 }

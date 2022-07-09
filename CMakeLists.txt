@@ -51,6 +51,9 @@ if(PC_PLATFORM)
     )
     target_link_libraries(core PUBLIC
         raylib
+        dl
+        pthread
+        m
     )
 endif()
 
