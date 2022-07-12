@@ -14,3 +14,13 @@ void Drawing_ClearScreen(struct rgba8888_color color)
   ClearBackground(toRaylibColor(color));
   EndDrawing();
 }
+
+
+void Drawing_LoadTexture(struct load_texture_options options)
+{
+  
+}
+
+void Drawing_UnloadTexture(char *id)
+{
+}

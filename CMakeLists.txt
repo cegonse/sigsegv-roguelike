@@ -24,6 +24,7 @@ set(CORE_SOURCES
     src/engine/list.c
     src/engine/hashmap.c
     src/engine/log.c
+    src/engine/texture_repository.c
 )
 
 # Stubbed sources for testing purposes
@@ -74,6 +75,15 @@ add_executable(test_list
 target_compile_options(test_list PRIVATE ${TEST_CFLAGS})
 target_include_directories(test_list PRIVATE ${TEST_INCLUDES})
 target_link_libraries(test_list PRIVATE core)
+
+# test_texture_repository
+add_executable(test_texture_repository
+    test/test_texture_repository.cpp
+)
+
+target_compile_options(test_texture_repository PRIVATE ${TEST_CFLAGS})
+target_include_directories(test_texture_repository PRIVATE ${TEST_INCLUDES})
+target_link_libraries(test_texture_repository PRIVATE core)
 
 # test_hashmap
 add_executable(test_hashmap
