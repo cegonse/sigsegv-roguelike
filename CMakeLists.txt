@@ -22,6 +22,7 @@ set(TEST_CFLAGS
 set(CORE_SOURCES
     src/game/game.c
     src/engine/list.c
+    src/engine/hashmap.c
     src/engine/log.c
 )
 
@@ -45,7 +46,7 @@ endif()
 
 add_library(core STATIC ${PLATFORM_CORE_SOURCES})
 target_include_directories(core PUBLIC ${CORE_INCLUDES})
-target_compile_options(core PRIVATE -Werror)
+target_compile_options(core PRIVATE -Werror -g)
 
 # Linker settings for PC version
 if(PC_PLATFORM)
@@ -65,6 +66,7 @@ add_executable(game src/main.c)
 target_link_libraries(game PRIVATE core)
 
 ## Tests
+# test_list
 add_executable(test_list
     test/test_list.cpp
 )
@@ -72,3 +74,12 @@ add_executable(test_list
 target_compile_options(test_list PRIVATE ${TEST_CFLAGS})
 target_include_directories(test_list PRIVATE ${TEST_INCLUDES})
 target_link_libraries(test_list PRIVATE core)
+
+# test_hashmap
+add_executable(test_hashmap
+    test/test_hashmap.cpp
+)
+
+target_compile_options(test_hashmap PRIVATE ${TEST_CFLAGS})
+target_include_directories(test_hashmap PRIVATE ${TEST_INCLUDES})
+target_link_libraries(test_hashmap PRIVATE core)
