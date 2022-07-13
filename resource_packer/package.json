@@ -1,0 +1,14 @@
+{
+  "name": "resource_packer",
+  "version": "1.0.0",
+  "description": "Resource packer SIGSEV",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^28.1.3"
+  }
+}
