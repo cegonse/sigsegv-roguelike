@@ -653,7 +653,7 @@ namespace cest
         }
 
         std::cout <<
-            ASCII_GRAY << " " << test_case->file << ":" << test_case->line << ASCII_RESET <<
+            ASCII_GRAY << " " << test_suite_name << ASCII_RESET <<
             ASCII_BOLD << " it " << test_case->name << ASCII_RESET <<
             std::endl;
 
