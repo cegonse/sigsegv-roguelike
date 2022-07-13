@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -p ./build/assets
-cp -r ./test_assets/* ./build/assets
+mkdir -p ./build/resources
+cp -r ./test_resources/* ./build/resources
 
 ./build/game
