@@ -1,7 +1,6 @@
 #include <cest>
 
-extern "C"
-{
+extern "C" {
 #include <engine/list.h>
 }
 
@@ -101,5 +100,26 @@ describe("Lists", []() {
     expect(List_GetAt(list, 1)).toEqual(&second);
     expect(List_GetAt(list, 2)).toEqual(&third);
     expect(List_GetAt(list, 3)).toEqual(&fourth);
+  });
+
+  it("finds the first element matching pattern", []() {
+    const auto equals = [](void *element, void *user) {
+      int x = *(int *)element;
+      int target = *(int *)user;
+
+      return x == target;
+    };
+    int first = 1, second = 2, third = 3, fourth = 4;
+    int *result;
+
+    List_Append(list, &third);
+    List_Append(list, &first);
+    List_Append(list, &second);
+    List_Append(list, &fourth);
+
+    result = (int *)List_FindFirst(list, &second, equals);
+
+    expect(result).toBeNotNull();
+    expect(*result).toEqual(second);
   });
 });

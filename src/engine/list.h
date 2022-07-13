@@ -23,3 +23,5 @@ int List_Size(List *self);
 void List_Sort(List *self, bool (*compareTo)(void *, void *));
 
 char *List_ToString(List *self);
+
+void *List_FindFirst(List *self, void *user, bool (*callback)(void *, void *));

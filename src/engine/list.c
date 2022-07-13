@@ -138,3 +138,18 @@ char *List_ToString(List *self)
 
   return out;
 }
+
+void *List_FindFirst(List *self, void *user, bool (*callback)(void *, void *))
+{
+  struct node *node;
+
+  DL_FOREACH(self->head, node)
+  {
+    if (callback(node->data, user))
+    {
+      return node->data;
+    }
+  }
+
+  return NULL;
+}
