@@ -10,11 +10,12 @@ set(CORE_INCLUDES
 
 set(TEST_INCLUDES
     ${CORE_INCLUDES}
-    vendor/cest/include
+    ${PROJECT_SOURCE_DIR}/vendor/cest/include
+    ${PROJECT_SOURCE_DIR}/test
 )
 
 set(TEST_CFLAGS
-    -g -O0 --std=c++14 -Wno-writable-strings -Werror
+    -g -O0 --std=c++14 -Werror
 )
 
 ## Core library
@@ -25,6 +26,7 @@ set(CORE_SOURCES
     src/engine/hashmap.c
     src/engine/log.c
     src/engine/texture_repository.c
+    src/engine/resource_pack.c
 )
 
 # Stubbed sources for testing purposes
@@ -33,6 +35,7 @@ if(TEST_PLATFORM)
         ${CORE_SOURCES}
         src/engine/null/window.c
         src/engine/null/drawing.c
+        src/engine/null/file.c
     )
 endif()
 
@@ -93,3 +96,12 @@ add_executable(test_hashmap
 target_compile_options(test_hashmap PRIVATE ${TEST_CFLAGS})
 target_include_directories(test_hashmap PRIVATE ${TEST_INCLUDES})
 target_link_libraries(test_hashmap PRIVATE core)
+
+# test_resource_pack
+add_executable(test_resource_pack
+    test/test_resource_pack.cpp
+)
+
+target_compile_options(test_resource_pack PRIVATE ${TEST_CFLAGS})
+target_include_directories(test_resource_pack PRIVATE ${TEST_INCLUDES})
+target_link_libraries(test_resource_pack PRIVATE core)
