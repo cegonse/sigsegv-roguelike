@@ -13,12 +13,22 @@ describe("Texture repository", []() {
     TextureRepository_Destroy();
   });
 
-  it("persists texture2d objects with an id", []() {
+  it("persists texture2d with an id", []() {
     struct texture2d texture;
     char *id = (char *)"myTexture";
 
     TextureRepository_Add(id, &texture);
 
-    //expect(TextureRepository_GetById(id)).toEqual(&texture);
+    expect(TextureRepository_GetById(id)).toEqual(&texture);
+  });
+
+  it("removes texture2d by id", []() {
+    struct texture2d texture;
+    char *id = (char *)"myTexture";
+    TextureRepository_Add(id, &texture);
+
+    TextureRepository_Remove(id);
+
+    expect(TextureRepository_GetById(id)).toBeNull();
   });
 });
