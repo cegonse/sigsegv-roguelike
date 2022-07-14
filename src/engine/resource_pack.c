@@ -15,7 +15,6 @@ void ResourcePack_Init(void)
 static void unloadPack(List *list, int index, void *data)
 {
   struct resource_pack *pack = data;
-  ResourcePack_Unload(pack->id);
 }
 
 void ResourcePack_Destroy(void)
@@ -34,10 +33,7 @@ void ResourcePack_Load(char *id)
   struct resource_pack *resource_pack;
   char path[kMAX_FILE_PATH];
 
-  resource_pack = calloc(1, sizeof(struct resource_pack));
-
   buildPath(id, path);
-  File_LoadBinary(path, sizeof(struct resource_pack), resource_pack);
 
   List_Append(active_resource_packs, resource_pack);
 }
@@ -47,7 +43,7 @@ bool findPackById(void *element, void *user)
   struct resource_pack *pack = element;
   char *id = user;
 
-  return strcmp(pack->id, id) == 0;
+  return strcmp("", id) == 0;
 }
 
 void ResourcePack_Unload(char *id)

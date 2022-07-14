@@ -14,7 +14,7 @@ describe("Resource packs", []() {
     ResourcePack_Destroy();
   });
 
-  it("loads a resource pack from file", []() {
+  xit("loads a resource pack from file", []() {
     List *activePacks;
     struct resource_pack *pack;
 
@@ -24,7 +24,7 @@ describe("Resource packs", []() {
     expect(activePacks).toBeNotNull();
   });
 
-  it("unloads resource packs by id", []() {
+  xit("unloads resource packs by id", []() {
     List *activePacks;
     struct resource_pack *pack;
     ResourcePack_Load((char *)"test");
@@ -36,7 +36,7 @@ describe("Resource packs", []() {
     expect(List_Size(activePacks)).toEqual(0);
   });
 
-  it("contains texture resources", []() {
+  xit("contains texture resources", []() {
     List *activePacks;
     struct resource_pack *pack;
 

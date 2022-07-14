@@ -3,4 +3,10 @@
 
 #define kMAX_FILE_PATH      4096
 
-int File_LoadBinary(char *path, size_t bytes, void *out);
+typedef struct file File;
+
+File *File_Open(char *path);
+
+void File_Close(File *self);
+
+void File_ReadBytes(File *self, size_t bytes, void *out);

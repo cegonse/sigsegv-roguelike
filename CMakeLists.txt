@@ -35,7 +35,7 @@ if(TEST_PLATFORM)
         ${CORE_SOURCES}
         src/engine/null/window.c
         src/engine/null/drawing.c
-        src/engine/null/file.c
+        src/engine/pc/file.c
     )
 endif()
 
@@ -45,6 +45,7 @@ if(PC_PLATFORM)
         ${CORE_SOURCES}
         src/engine/pc/window.c
         src/engine/pc/drawing.c
+        src/engine/pc/file.c
     )
 endif()
 
@@ -105,3 +106,12 @@ add_executable(test_resource_pack
 target_compile_options(test_resource_pack PRIVATE ${TEST_CFLAGS})
 target_include_directories(test_resource_pack PRIVATE ${TEST_INCLUDES})
 target_link_libraries(test_resource_pack PRIVATE core)
+
+# test_resource_file
+add_executable(test_resource_file
+    test/test_resource_file.cpp
+)
+
+target_compile_options(test_resource_file PRIVATE ${TEST_CFLAGS})
+target_include_directories(test_resource_file PRIVATE ${TEST_INCLUDES})
+target_link_libraries(test_resource_file PRIVATE core)
