@@ -11,13 +11,3 @@ int File_LoadBinary(char *path, size_t bytes, void *out)
   memcpy(out, load_binary_test_data, bytes);
   return 0;
 }
-
-void FileStub_OnLoadBinary(void *data)
-{
-  load_binary_test_data = data;
-}
-
-char *FileStub_LoadBinary_LastPath(void)
-{
-  return load_binary_last_path;
-}
