@@ -4,6 +4,7 @@
 #include <engine/file.h>
 #include <engine/hashmap.h>
 #include <engine/resource_file.h>
+#include <engine/resource_pack.h>
 
 static Hashmap *active_resource_packs;
 

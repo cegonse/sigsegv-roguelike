@@ -27,6 +27,7 @@ set(CORE_SOURCES
     src/engine/log.c
     src/engine/texture_repository.c
     src/engine/resource_pack.c
+    src/engine/resource_file.c
 )
 
 # Stubbed sources for testing purposes
