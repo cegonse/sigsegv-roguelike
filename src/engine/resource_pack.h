@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include <engine/list.h>
 
 void ResourcePack_Init(void);
@@ -9,4 +10,4 @@ void ResourcePack_Load(char *id);
 
 void ResourcePack_Unload(char *id);
 
-List *ResourcePack_AllActive(void);
+bool ResourcePack_IsActive(char *id);

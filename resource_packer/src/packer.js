@@ -1,48 +1,51 @@
 const fs = require("fs")
-const path = require("path")
+const texturePacker = require("./textures")
+const buffer = require("./buffer")
 
-function readFilesFromPath(directory) {
+const log = (message) => {
+  if (process.env["NODE_ENV"] !== "test") {
+    console.log(message)
+  }
+}
+
+const readFilesFromPath = (directory, packName) => {
   const textures = [];
 
   fs.readdir(`${process.cwd()}/${directory}`, (_, files) => {
     files.forEach(file => {
       if (file.includes(".png")) {
-        textures.push(file)
+        textures.push(`${directory}/${file}`)
       }
     })
 
     const result = buildResourcePack(textures)
-    console.log(`Processed ${result.numResources} resources`)
-    result.textures.forEach((texture) => console.log(`- ${texture}`))
+    log(`Processed ${result.numResources} resources`)
 
-    fs.writeFileSync(`${process.cwd()}/${directory}.pack`, result.buffer)
+    fs.writeFileSync(`${process.cwd()}/${packName}.pack`, result.buffer)
   })
 }
 
-function buildResourcePack(textures) {
+
+const chunksSize = (chunks) => {
+  let size = 0;
+  chunks.forEach((chunk) => size += chunk.byteLength);
+  return size;
+}
+
+const buildResourcePack = (textures) => {
   const chunks = []
   const textureChunks = []
 
   const magicBuffer = Buffer.from('SIGSEGV', 'ascii')
-  const bomBuffer = uint32leBuffer(0x12345678)
+  const bomBuffer = buffer.uint32leBuffer(0x12345678)
 
   textures.forEach((texture) => {
-    const textureId = path.basename(texture).split('.')[0];
-
-    const idLengthBuffer = uint32leBuffer(textureId.length)
-    const pathLengthBuffer = uint32leBuffer(texture.length)
-    const idBuffer = Buffer.from(textureId, 'ascii')
-    const pathBuffer = Buffer.from(texture, 'ascii')
-
-    textureChunks.push(Buffer.concat([
-      idLengthBuffer,
-      idBuffer,
-      pathLengthBuffer,
-      pathBuffer
-    ]))
+    const textureData = texturePacker.packTexture(texture)
+    log(`- Packing ${texture} (${textureData.metadata.width}x${textureData.metadata.height})`)
+    textureChunks.push(textureData.binary)
   })
 
-  chunks.push(uint32leBuffer(textureChunks.length))
+  chunks.push(buffer.uint32leBuffer(textureChunks.length))
   textureChunks.forEach((chunk) => chunks.push(chunk))
 
   const totalSize = (
@@ -55,7 +58,7 @@ function buildResourcePack(textures) {
   const fullBuffer = Buffer.concat([
     magicBuffer,
     bomBuffer,
-    uint32leBuffer(totalSize),
+    buffer.uint32leBuffer(totalSize),
     Buffer.concat(chunks)
   ])
 
@@ -64,18 +67,6 @@ function buildResourcePack(textures) {
     numResources: textures.length,
     textures
   }
-}
-
-function chunksSize(chunks) {
-  let size = 0;
-  chunks.forEach((chunk) => size += chunk.byteLength);
-  return size;
-}
-
-function uint32leBuffer(num) {
-  const buffer = Buffer.alloc(4)
-  buffer.writeUInt32LE(num)
-  return buffer
 }
 
 module.exports = {

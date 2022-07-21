@@ -6,9 +6,8 @@ game: clean resources
 
 resources:
 	@mkdir -p build/resources
-	@node ./resource_packer/main.js ./resources/default
-	@mv resources/default.pack ./build/resources
-	@cp resources/default/*.png ./build/resources
+	@node ./resource_packer/main.js resources/default default
+	@mv default.pack ./build/resources
 
 test: clean
 	@mkdir -p build

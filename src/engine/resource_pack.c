@@ -2,25 +2,19 @@
 #include <stdio.h>
 #include <memory.h>
 #include <engine/file.h>
-#include <engine/list.h>
-#include <engine/resource_pack.h>
+#include <engine/hashmap.h>
+#include <engine/resource_file.h>
 
-static List *active_resource_packs;
+static Hashmap *active_resource_packs;
 
 void ResourcePack_Init(void)
 {
-  active_resource_packs = List_Create();
-}
-
-static void unloadPack(List *list, int index, void *data)
-{
-  struct resource_pack *pack = data;
+  active_resource_packs = Hashmap_Create();
 }
 
 void ResourcePack_Destroy(void)
 {
-  List_ForEach(active_resource_packs, unloadPack);
-  List_Destroy(active_resource_packs);
+  Hashmap_Destroy(active_resource_packs);
 }
 
 static void buildPath(char *id, char *path)
@@ -35,25 +29,14 @@ void ResourcePack_Load(char *id)
 
   buildPath(id, path);
 
-  List_Append(active_resource_packs, resource_pack);
-}
-
-bool findPackById(void *element, void *user)
-{
-  struct resource_pack *pack = element;
-  char *id = user;
-
-  return strcmp("", id) == 0;
+  Hashmap_Add(active_resource_packs, id, resource_pack);
 }
 
 void ResourcePack_Unload(char *id)
 {
-  struct resource_pack *pack = List_FindFirst(active_resource_packs, id, findPackById);
-  List_Remove(active_resource_packs, pack);
-  free(pack);
 }
 
-List *ResourcePack_AllActive(void)
+bool ResourcePack_IsActive(char *id)
 {
-  return active_resource_packs;
+  return Hashmap_Get(active_resource_packs, id) != NULL;
 }

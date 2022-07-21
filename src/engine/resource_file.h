@@ -12,4 +12,4 @@ struct resource_pack {
 
 struct resource_pack *ResourceFile_FromPath(char *path);
 
-void ResourceFile_Destroy(struct resource_file *self);
+void ResourceFile_Destroy(struct resource_pack *self);
