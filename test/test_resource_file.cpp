@@ -40,5 +40,7 @@ describe("Resource file", []() {
       resource_pack->textures[1],
       "second", 4, 4, kRESOURCE_TEXTURE_FORMAT_RGBA32, 64
     );
+
+    ResourceFile_Destroy(resource_pack);
   });
 });

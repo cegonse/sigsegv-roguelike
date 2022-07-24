@@ -113,5 +113,11 @@ struct resource_pack *ResourceFile_FromPath(char *path) {
 }
 
 void ResourceFile_Destroy(struct resource_pack *self) {
+  for (int i=0; i<self->num_textures; ++i) {
+    free(self->textures[i]->data);
+    free(self->textures[i]);
+  }
+
+  free(self->textures);
   free(self);
 }
