@@ -2,9 +2,8 @@ const packer = require("../src/packer")
 
 // Pack header
 // 53 49 47 53 45 47 56   Magic (SIGSEGV)
-// 12 34                  BOM (must be 1234 in little endian)
-// XX XX XX XX            Pack size in bytes (little endian 32 bit unsigned int)
-// XX XX XX XX            Num resources (little endian 32 bit unsigned int)
+// XX XX XX XX            Pack size in bytes excluding header (little endian 32 bit unsigned int)
+// XX XX XX XX            Num textures (little endian 32 bit unsigned int)
 //
 // For each texture resource
 // XX XX XX XX            Texture ID length (little endian 32 bit unsigned int)
@@ -21,8 +20,7 @@ describe("Resource packer", () => {
 
     expect([...result.buffer]).toEqual([
       0x53, 0x49, 0x47, 0x53, 0x45, 0x47, 0x56,
-      0x78, 0x56, 0x34, 0x12,
-      0x13, 0x00, 0x00, 0x00,
+      0x04, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00
     ])
     expect(result.numResources).toEqual(0)
@@ -35,8 +33,7 @@ describe("Resource packer", () => {
 
     expect([...result.buffer]).toEqual([
       0x53, 0x49, 0x47, 0x53, 0x45, 0x47, 0x56,
-      0x78, 0x56, 0x34, 0x12,
-      0x6B, 0x00, 0x00, 0x00,
+      0x5C, 0x00, 0x00, 0x00,
       0x01, 0x00, 0x00, 0x00,
       0x07, 0x00, 0x00, 0x00,
       0x74, 0x65, 0x78, 0x74, 0x75, 0x72, 0x65,

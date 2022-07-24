@@ -1,13 +1,22 @@
 #pragma once
+#include <stdint.h>
 
-struct resource_pack_file {
+typedef enum {
+  kRESOURCE_TEXTURE_FORMAT_RGBA32
+} ResourceTextureFormat;
+
+struct resource_pack_texture {
   char *id;
-  char *path;
+  uint32_t width;
+  uint32_t height;
+  ResourceTextureFormat texture_format;
+  size_t data_size;
+  uint8_t *data;
 };
 
 struct resource_pack {
-  int num_resources;
-  struct resource_pack_file **resources;
+  int num_textures;
+  struct resource_pack_texture **textures;
 };
 
 struct resource_pack *ResourceFile_FromPath(char *path);

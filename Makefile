@@ -6,7 +6,7 @@ game: clean resources
 
 resources:
 	@mkdir -p build/resources
-	@node ./resource_packer/main.js resources/default default
+	@nodejs ./resource_packer/main.js resources/default default
 	@mv default.pack ./build/resources
 
 test: clean

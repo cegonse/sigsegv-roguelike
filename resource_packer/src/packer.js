@@ -37,7 +37,6 @@ const buildResourcePack = (textures) => {
   const textureChunks = []
 
   const magicBuffer = Buffer.from('SIGSEGV', 'ascii')
-  const bomBuffer = buffer.uint32leBuffer(0x12345678)
 
   textures.forEach((texture) => {
     const textureData = texturePacker.packTexture(texture)
@@ -48,17 +47,9 @@ const buildResourcePack = (textures) => {
   chunks.push(buffer.uint32leBuffer(textureChunks.length))
   textureChunks.forEach((chunk) => chunks.push(chunk))
 
-  const totalSize = (
-    magicBuffer.byteLength +
-    bomBuffer.byteLength +
-    chunksSize(chunks) +
-    4
-  )
-
   const fullBuffer = Buffer.concat([
     magicBuffer,
-    bomBuffer,
-    buffer.uint32leBuffer(totalSize),
+    buffer.uint32leBuffer(chunksSize(chunks)),
     Buffer.concat(chunks)
   ])
 

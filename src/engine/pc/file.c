@@ -10,6 +10,12 @@ File *File_Open(char *path)
 {
   File *self = calloc(1, sizeof(File));
   self->fd = fopen(path, "rb");
+
+  if (self->fd == NULL) {
+    free(self);
+    return NULL;
+  }
+
   return self;
 }
 
