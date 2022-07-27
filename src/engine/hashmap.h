@@ -13,3 +13,5 @@ int Hashmap_Add(Hashmap *self, char *key, void *value);
 void Hashmap_Remove(Hashmap *self, char *key);
 
 void *Hashmap_Get(Hashmap *self, char *key);
+
+void Hashmap_Entries(Hashmap *self, void *user, void (*it)(Hashmap *, void *, char *, void *));

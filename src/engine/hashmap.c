@@ -13,18 +13,15 @@ struct hashmap {
   struct hash_key *map;
 };
 
-Hashmap *Hashmap_Create(void)
-{
+Hashmap *Hashmap_Create(void) {
   return calloc(1, sizeof(Hashmap));
 }
 
-void Hashmap_Destroy(Hashmap *self)
-{
+void Hashmap_Destroy(Hashmap *self) {
   free(self);
 }
 
-int Hashmap_Add(Hashmap *self, char *key, void *value)
-{
+int Hashmap_Add(Hashmap *self, char *key, void *value) {
   if (strlen(key) >= kHASHMAP_MAX_KEY_LENGTH) {
     return -1;
   }
@@ -38,8 +35,7 @@ int Hashmap_Add(Hashmap *self, char *key, void *value)
   return 0;
 }
 
-void *Hashmap_Get(Hashmap *self, char *key)
-{
+void *Hashmap_Get(Hashmap *self, char *key) {
   struct hash_key *e = NULL;
   HASH_FIND_STR(self->map, key, e);
 
@@ -47,12 +43,19 @@ void *Hashmap_Get(Hashmap *self, char *key)
   return e->value;
 }
 
-void Hashmap_Remove(Hashmap *self, char *key)
-{
+void Hashmap_Remove(Hashmap *self, char *key) {
   struct hash_key *e = NULL;
   
   HASH_FIND_STR(self->map, key, e);
   if (e == NULL) return;
 
   HASH_DEL(self->map, e);
+}
+
+void Hashmap_Entries(Hashmap *self, void *user, void (*it)(Hashmap *, void *, char *, void *)) {
+  struct hash_key *e = NULL;
+
+  for (e=self->map; e != NULL; e=e->hh.next) {
+    it(self, user, e->key, e->value);
+  }
 }

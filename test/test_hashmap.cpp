@@ -54,6 +54,25 @@ describe("Hash map", []() {
 
     expect(Hashmap_Get(map, key)).toBeNull();
   });
+
+  it("can iterate through its keys and values", []() {
+    const auto it = [](Hashmap *self, void *user, char *key, void *value) {
+      int v = *((int *)value);
+      std::vector<int> *vv = (std::vector<int> *)user;
+      vv->push_back(v);
+    };
+    std::vector<int> values;
+    int first_value = 100;
+    int second_value = 200;
+
+    Hashmap_Add(map, (char *)"first", &first_value);
+    Hashmap_Add(map, (char *)"second", &second_value);
+
+    Hashmap_Entries(map, (void *)&values, it);
+
+    expect(values).toContain(100);
+    expect(values).toContain(200);
+  });
 });
 
 static char *aLongKey(void)
