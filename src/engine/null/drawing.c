@@ -14,3 +14,6 @@ struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture
 
   return texture;
 }
+
+void Drawing_DrawTexture(char *id, int x, int y) {
+}

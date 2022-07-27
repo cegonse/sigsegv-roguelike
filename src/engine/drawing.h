@@ -24,3 +24,5 @@ struct texture2d {
 void Drawing_ClearScreen(struct rgba8888_color color);
 
 struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture);
+
+void Drawing_DrawTexture(char *id, int x, int y);
