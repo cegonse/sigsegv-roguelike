@@ -36,6 +36,17 @@ const toBinary = (textureId, image) => {
   ])
 }
 
+const transposeTexture = (width, height, data) => {
+  const buffer = Buffer.alloc(width*height*4)
+  const dataBuffer = [...data]
+
+  for (let x=0; x<width; x++) {
+    for (let y=0; y<height; y++) {
+      buffer.writeUint8(dataBuffer[x*width+y])
+    }
+  }
+}
+
 const packTexture = (filePath) => {
   const image = loadImage(filePath);
 
@@ -64,7 +75,7 @@ const packTexture = (filePath) => {
       height: image.height,
       format: "rgba32"
     },
-    data: image.data,
+    data: transposeTexture(image.width, image.height, image.data),
     binary: toBinary(textureId, image)
   }
 }
