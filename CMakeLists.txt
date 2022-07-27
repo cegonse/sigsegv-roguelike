@@ -36,6 +36,7 @@ if(TEST_PLATFORM)
         ${CORE_SOURCES}
         src/engine/null/window.c
         src/engine/null/drawing.c
+        src/engine/null/platform.c
         src/engine/pc/file.c
     )
 endif()
@@ -47,6 +48,7 @@ if(PC_PLATFORM)
         src/engine/pc/window.c
         src/engine/pc/drawing.c
         src/engine/pc/file.c
+        src/engine/pc/platform.c
     )
 endif()
 

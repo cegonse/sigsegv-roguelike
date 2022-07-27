@@ -9,10 +9,12 @@ extern "C" {
 describe("Resource packs", []() {
   beforeEach([]() {
     ResourcePack_Init();
+    TextureRepository_Init();
   });
 
   afterEach([]() {
     ResourcePack_Destroy();
+    TextureRepository_Destroy();
   });
 
   it("loads a resource pack from file", []() {
@@ -29,11 +31,14 @@ describe("Resource packs", []() {
     expect(texture->color_format).toEqual(kTEXTURE_COLOR_FORMAT_RGBA32);
   });
 
-  xit("unloads resource packs by id", []() {
+  it("unloads resource packs by id", []() {
     char *packId = (char *)"sample";
     ResourcePack_Load((char *)"sample");
 
     ResourcePack_Unload((char *)"sample");
+
     expect(ResourcePack_IsActive(packId)).toBeFalsy();
+    struct texture2d *texture = TextureRepository_GetById((char *)"first");
+    expect(texture).toBeNull();
   });
 });

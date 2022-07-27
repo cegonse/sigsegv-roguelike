@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <engine/resource_file.h>
 
 typedef enum {
   kTEXTURE_COLOR_FORMAT_RGBA32
@@ -13,10 +14,13 @@ struct rgba8888_color {
 };
 
 struct texture2d {
-  void *nativeHandle;
+  void *native_handle;
+  uint8_t *raw_data;
   TextureColorFormat color_format;
   unsigned int width;
   unsigned int height;
 };
 
 void Drawing_ClearScreen(struct rgba8888_color color);
+
+struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture);
