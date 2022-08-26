@@ -56,20 +56,22 @@ void Log_Error(char *fmt, ...) {
   free(new_format);
 }
 
-void Log_Hex(uint8_t *data, size_t size) {
+void Log_Hex(void *data, size_t size) {
   char message[512];
   char *new_format;
 
   sprintf(message, "Hex dump of %p (%d bytes)", data, size);
   new_format = buildFormat("HEX", message);
   
-  printf("%s\n", new_format);
+  printf("%s", new_format);
 
   for (int i=0; i<size; ++i) {
-    printf("%02X ", data[i]);
+    printf("%02X ", ((uint8_t *)data)[i]);
 
     if (i % 16 == 0 && i != 0) {
       printf("\n");
     }
   }
+
+  printf("\n");
 }

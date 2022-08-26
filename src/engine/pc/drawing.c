@@ -31,8 +31,6 @@ struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture
   image.data = pack_texture->data;
   image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 
-  Log_Hex(image.data, image.width*image.height*4);
-
   *(native_texture) = LoadTextureFromImage(image);
   texture->native_handle = native_texture;
 

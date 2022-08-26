@@ -13,13 +13,14 @@ const loadImage = (filePath) => {
 }
 
 const textureFormats = {
-  rgba32: 0x00
+  rgba32: 0x00,
+  rgb24: 0x01
 }
 
-const toBinary = (textureId, image) => {
+const toBinary = (textureId, image, format) => {
   const textureIdLengthBuffer = buffer.uint32leBuffer(textureId.length)
   const textureIdBuffer = Buffer.from(textureId, 'ascii')
-  const textureFormatBuffer = buffer.uint8Buffer(textureFormats.rgba32)
+  const textureFormatBuffer = buffer.uint8Buffer(textureFormats[format])
   const textureWidthBuffer = buffer.uint32leBuffer(image.width)
   const textureHeightBuffer = buffer.uint32leBuffer(image.height)
   const textureDataBuffer = Buffer.from([...image.data])
@@ -36,15 +37,16 @@ const toBinary = (textureId, image) => {
   ])
 }
 
-const transposeTexture = (width, height, data) => {
-  const buffer = Buffer.alloc(width*height*4)
-  const dataBuffer = [...data]
-
-  for (let x=0; x<width; x++) {
-    for (let y=0; y<height; y++) {
-      buffer.writeUint8(dataBuffer[x*width+y])
-    }
+const readFormat = (image) => {
+  if (image.colorType === "rgb" && image.bitDepth === 8 && image.channels === 3) {
+    return "rgb24"
   }
+
+  if (image.colorType === "rgba" && image.bitDepth === 8 && image.channels === 4) {
+    return "rgba32"
+  }
+
+  return "unsupported"
 }
 
 const packTexture = (filePath) => {
@@ -57,12 +59,9 @@ const packTexture = (filePath) => {
   }
 
   const textureId = path.basename(filePath).split('.')[0];
+  const format = readFormat(image);
 
-  if (
-    image.colorType !== "rgba" &&
-    image.bitDepth !== 8 &&
-    image.channels !== 4
-  ) {
+  if (format === "unsupported") {
     return {
       error: `Unsupported format (${image.colorType})`
     }
@@ -73,10 +72,10 @@ const packTexture = (filePath) => {
       id: textureId,
       width: image.width,
       height: image.height,
-      format: "rgba32"
+      format
     },
-    data: transposeTexture(image.width, image.height, image.data),
-    binary: toBinary(textureId, image)
+    data: image.data,
+    binary: toBinary(textureId, image, format)
   }
 }
 

@@ -4,7 +4,7 @@
 
 void Game_Draw(void)
 {
-  Drawing_DrawTexture("colors", 100, 100);
+  Drawing_DrawTexture("wall", 100, 100);
 
   Drawing_ClearScreen((struct rgba8888_color){
     r: 255,

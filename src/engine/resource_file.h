@@ -10,7 +10,7 @@ struct resource_pack_texture {
   char *id;
   uint32_t width;
   uint32_t height;
-  ResourceTextureFormat texture_format;
+  uint8_t texture_format;
   size_t data_size;
   uint8_t *data;
 };
