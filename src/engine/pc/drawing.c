@@ -29,7 +29,18 @@ struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture
   image.height = texture->height;
   image.mipmaps = 1;
   image.data = pack_texture->data;
-  image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+
+  switch (pack_texture->texture_format) {
+    case kRESOURCE_TEXTURE_FORMAT_RGBA32:
+      image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+      break;
+    case kRESOURCE_TEXTURE_FORMAT_RGB24:
+      image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8;
+      break;
+    default:
+      image.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+      break;
+  }
 
   *(native_texture) = LoadTextureFromImage(image);
   texture->native_handle = native_texture;

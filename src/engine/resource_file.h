@@ -3,7 +3,8 @@
 #include <stdint.h>
 
 typedef enum {
-  kRESOURCE_TEXTURE_FORMAT_RGBA32
+  kRESOURCE_TEXTURE_FORMAT_RGBA32 = 0x00,
+  kRESOURCE_TEXTURE_FORMAT_RGB24 = 0x01
 } ResourceTextureFormat;
 
 struct resource_pack_texture {

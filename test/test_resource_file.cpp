@@ -38,7 +38,7 @@ describe("Resource file", []() {
     );
     expectResourcePackTextureToContain(
       resource_pack->textures[1],
-      "second", 4, 4, kRESOURCE_TEXTURE_FORMAT_RGBA32, 64
+      "second", 4, 4, kRESOURCE_TEXTURE_FORMAT_RGB24, 48
     );
 
     ResourceFile_Destroy(resource_pack);

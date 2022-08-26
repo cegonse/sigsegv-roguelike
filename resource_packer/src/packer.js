@@ -40,7 +40,7 @@ const buildResourcePack = (textures) => {
 
   textures.forEach((texture) => {
     const textureData = texturePacker.packTexture(texture)
-    log(`- Packing ${texture} (${textureData.metadata.width}x${textureData.metadata.height})`)
+    log(`- Packing ${texture} (${textureData.metadata.width}x${textureData.metadata.height} - ${textureData.metadata.format})`)
     textureChunks.push(textureData.binary)
   })
 
