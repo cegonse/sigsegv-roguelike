@@ -14,20 +14,19 @@ void Drawing_Init(int viewport_width, int viewport_height) {
 
 }
 
-static void logCallback(int logLevel, const char *text, va_list args)
-{
+static void logCallback(int logLevel, const char *text, va_list args) {
   char log[4096];
 
   vsprintf(log, text, args);
   Log_Info(log);
 }
 
-void Window_Open(struct window_settings settings)
-{
+void Window_Open(struct window_settings settings) {
   SetTraceLogCallback(logCallback);
 
   InitWindow(settings.width, settings.height, settings.title);
   SetWindowState(FLAG_WINDOW_RESIZABLE);
+  SetWindowMinSize(settings.width, settings.height);
   SetTargetFPS(
     GetMonitorRefreshRate(GetCurrentMonitor())
   );
@@ -44,16 +43,24 @@ void Window_Open(struct window_settings settings)
   ResourcePack_Load("default");
 
   while (!WindowShouldClose()) {
+    int screen_width = GetScreenWidth();
+    int screen_height = GetScreenHeight();
+
     BeginTextureMode(render_texture);
     settings.onDraw();
     EndTextureMode();
 
     BeginDrawing();
-    DrawTextureRec(
+    ClearBackground(BLACK);
+    DrawTextureEx(
       render_texture.texture,
-      (Rectangle) { 0, 0, (float)render_texture.texture.width, (float)-render_texture.texture.height },
-      (Vector2) { 0, 0 },
-      WHITE
+      (Vector2) {
+        screen_width * 0.5f - settings.width * 0.5f,
+        screen_height * 0.5f - settings.height * 0.5f
+      },
+      0.0f,
+      1.0f,
+      RAYWHITE
     );
     EndDrawing();
   }
