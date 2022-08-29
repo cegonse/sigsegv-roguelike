@@ -1,0 +1,65 @@
+#pragma once
+#include <stdbool.h>
+
+typedef enum {
+  kKEYCODE_A,
+  kKEYCODE_B,
+  kKEYCODE_C,
+  kKEYCODE_D,
+  kKEYCODE_E,
+  kKEYCODE_F,
+  kKEYCODE_G,
+  kKEYCODE_H,
+  kKEYCODE_I,
+  kKEYCODE_J,
+  kKEYCODE_K,
+  kKEYCODE_L,
+  kKEYCODE_M,
+  kKEYCODE_N,
+  kKEYCODE_O,
+  kKEYCODE_P,
+  kKEYCODE_Q,
+  kKEYCODE_R,
+  kKEYCODE_S,
+  kKEYCODE_T,
+  kKEYCODE_U,
+  kKEYCODE_V,
+  kKEYCODE_W,
+  kKEYCODE_X,
+  kKEYCODE_Y,
+  kKEYCODE_Z,
+  kKEYCODE_0,
+  kKEYCODE_1, 
+  kKEYCODE_2, 
+  kKEYCODE_3, 
+  kKEYCODE_4, 
+  kKEYCODE_5, 
+  kKEYCODE_6, 
+  kKEYCODE_7, 
+  kKEYCODE_8, 
+  kKEYCODE_9, 
+  kKEYCODE_F1,
+  kKEYCODE_F2,
+  kKEYCODE_F3,
+  kKEYCODE_F4,
+  kKEYCODE_F5,
+  kKEYCODE_F6,
+  kKEYCODE_F7,
+  kKEYCODE_F8,
+  kKEYCODE_F9,
+  kKEYCODE_F10,
+  kKEYCODE_F11,
+  kKEYCODE_F12,
+  kKEYCODE_ARROW_UP,
+  kKEYCODE_ARROW_DOWN,
+  kKEYCODE_ARROW_LEFT,
+  kKEYCODE_ARROW_RIGHT,
+  kKEYCODE_TAB,
+  kKEYCODE_MAX
+} KeyCode;
+
+bool Input_GetKeyDown(KeyCode keycode);
+
+bool Input_GetKeyUp(KeyCode keycode);
+
+bool Input_GetKey(KeyCode keycode);

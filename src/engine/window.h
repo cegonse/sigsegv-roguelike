@@ -12,3 +12,5 @@ struct window_settings {
 typedef struct window Window;
 
 void Window_Open(struct window_settings settings);
+
+void Window_ToggleFullscreen(void);

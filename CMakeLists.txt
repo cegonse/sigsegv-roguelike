@@ -38,6 +38,7 @@ if(TEST_PLATFORM)
         src/engine/null/drawing.c
         src/engine/null/platform.c
         src/engine/pc/file.c
+        src/engine/null/input.c
     )
 endif()
 
@@ -49,6 +50,7 @@ if(PC_PLATFORM)
         src/engine/pc/drawing.c
         src/engine/pc/file.c
         src/engine/pc/platform.c
+        src/engine/pc/input.c
     )
 endif()
 

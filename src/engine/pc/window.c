@@ -10,6 +10,7 @@
 #include <engine/window.h>
 
 static RenderTexture2D render_texture;
+static bool is_fullscreen = false;
 
 void Drawing_Init(int viewport_width, int viewport_height) {
 
@@ -82,4 +83,15 @@ void Window_Open(struct window_settings settings) {
   ResourcePack_Destroy();
   TextureRepository_Destroy();
   CloseWindow();
+}
+
+void Window_ToggleFullscreen(void)
+{
+  if (is_fullscreen) {
+    RestoreWindow();
+  } else {
+    MaximizeWindow();
+  }
+
+  is_fullscreen = !is_fullscreen;
 }
