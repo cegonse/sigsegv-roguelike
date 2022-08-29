@@ -3,7 +3,10 @@
 #include <game/game.h>
 
 void Game_Draw(void) {
-  Drawing_DrawTexture("wall", 100, 100);
+  Drawing_DrawTexture("wall", 0, 0);
+  Drawing_DrawTexture("wall", 320-64, 0);
+  Drawing_DrawTexture("wall", 0, 240-64);
+  Drawing_DrawTexture("wall", 320-64, 240-64);
 
   Drawing_ClearScreen((struct rgba8888_color){
     r: 255,
