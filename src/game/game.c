@@ -31,10 +31,10 @@ void Game_Draw(void) {
   Drawing_DrawTexture("wall", x, y);
 
   Drawing_ClearScreen((struct rgba8888_color){
-    r: 255,
-    g: 255,
-    b: 255,
-    a: 255
+    .r = 255,
+    .g = 255,
+    .b = 255,
+    .a = 255
   });
 }
 
@@ -44,10 +44,10 @@ void Game_Exit(void) {
 
 void Game_Run(void) {
   Window_Open((struct window_settings){
-    width: 320,
-    height: 240,
-    title: "Roguelike",
-    onDraw: Game_Draw,
-    onExit: Game_Exit
+    .width = 320,
+    .height = 240,
+    .title = "Roguelike",
+    .onDraw = Game_Draw,
+    .onExit = Game_Exit
   });
 }

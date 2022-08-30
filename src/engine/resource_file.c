@@ -49,7 +49,7 @@ static void parseTextures(uint8_t *full_pack, struct resource_pack *resource_pac
     memcpy(&texture_id_length, full_pack + offset, sizeof(uint32_t));
     offset += sizeof(uint32_t);
 
-    texture_id = full_pack + offset;
+    texture_id = (char *)(full_pack + offset);
     offset += texture_id_length;
 
     memcpy(&texture_format, full_pack + offset, sizeof(uint8_t));

@@ -60,7 +60,7 @@ void Log_Hex(void *data, size_t size) {
   char message[512];
   char *new_format;
 
-  sprintf(message, "Hex dump of %p (%d bytes)", data, size);
+  sprintf(message, "Hex dump of %p (%zu bytes)", data, size);
   new_format = buildFormat("HEX", message);
   
   printf("%s", new_format);

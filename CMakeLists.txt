@@ -60,15 +60,36 @@ target_compile_options(core PRIVATE -Werror -g)
 
 # Linker settings for PC version
 if(PC_PLATFORM)
-    target_link_directories(core PUBLIC
-        ${PROJECT_SOURCE_DIR}/vendor/raylib/linux-amd64
-    )
-    target_link_libraries(core PUBLIC
-        raylib
-        dl
-        pthread
-        m
-    )
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        find_library(OPENGL_LIBRARY OpenGL)
+        find_library(IOKIT_LIBRARY IOKit)
+        find_library(COCOA_LIBRARY Cocoa)
+        find_library(COREVIDEO_LIBRARY CoreVideo)
+        target_link_directories(core PUBLIC
+            ${PROJECT_SOURCE_DIR}/vendor/raylib/darwin-aarch64
+        )
+        target_link_libraries(core PUBLIC
+            raylib
+            dl
+            pthread
+            m
+            ${OPENGL_LIBRARY}
+            ${IOKIT_LIBRARY}
+            ${COCOA_LIBRARY}
+            ${COREVIDEO_LIBRARY}
+        )
+    endif()
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        target_link_directories(core PUBLIC
+            ${PROJECT_SOURCE_DIR}/vendor/raylib/linux-amd64
+        )
+        target_link_libraries(core PUBLIC
+            raylib
+            dl
+            pthread
+            m
+        )
+    endif()
 endif()
 
 ## Game binary

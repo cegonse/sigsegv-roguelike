@@ -77,7 +77,7 @@ describe("Hash map", []() {
 
 static char *aLongKey(void)
 {
-  char *key = new char[1, kHASHMAP_MAX_KEY_LENGTH + 100];
+  char *key = new char[kHASHMAP_MAX_KEY_LENGTH + 100];
 
   for (int i=0; i<(kHASHMAP_MAX_KEY_LENGTH + 100)-1; ++i) {
     key[i] = 'x';

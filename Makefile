@@ -1,12 +1,21 @@
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+NODE := nodejs
+endif
+ifeq ($(UNAME_S),Darwin)
+NODE := node
+endif
+
 all: test start
 
-game: clean resources
+game: clean
 	@mkdir -p build
 	@cd build && cmake -DPC_PLATFORM=True .. && make --no-print-directory && cd ..
 
 resources:
 	@mkdir -p build/resources
-	@nodejs ./resource_packer/main.js resources/default default
+	@$(NODE) ./resource_packer/main.js resources/default default
 	@mv default.pack ./build/resources
 
 test: clean
