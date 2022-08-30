@@ -9,7 +9,7 @@ endif
 
 all: test start
 
-game: clean
+game: clean resources
 	@mkdir -p build
 	@cd build && cmake -DPC_PLATFORM=True .. && make --no-print-directory && cd ..
 
