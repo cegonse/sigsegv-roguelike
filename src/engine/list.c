@@ -3,25 +3,21 @@
 #include <uthash/include/utlist.h>
 #include <engine/list.h>
 
-struct node
-{
+struct node {
   void *data;
   struct node *next;
   struct node *prev;
 };
 
-struct list
-{
+struct list {
   struct node *head;
 };
 
-static bool compare(struct node *first, struct node *second)
-{
+static bool compare(struct node *first, struct node *second) {
   return !(first->data == second->data);
 }
 
-static struct node *findByData(List *self, void *data)
-{
+static struct node *findByData(List *self, void *data) {
   struct node *tail;
   struct node *node = calloc(1, sizeof(struct node));
 
@@ -31,22 +27,18 @@ static struct node *findByData(List *self, void *data)
   return node;
 }
 
-List *List_Create(void)
-{
+List *List_Create(void) {
   List *self = calloc(1, sizeof(List));
 
   return self;
 }
 
-void List_Destroy(List *self)
-{
+void List_Destroy(List *self) {
   struct node *node;
   struct node *temp;
 
-  if (self)
-  {
-    DL_FOREACH_SAFE(self->head, node, temp)
-    {
+  if (self) {
+    DL_FOREACH_SAFE(self->head, node, temp) {
       DL_DELETE(self->head, node);
       free(node);
     }
@@ -55,20 +47,17 @@ void List_Destroy(List *self)
   }
 }
 
-void *List_GetAt(List *self, int index)
-{
+void *List_GetAt(List *self, int index) {
   struct node *node = self->head;
 
-  for (int i = 0; i < index; ++i)
-  {
+  for (int i = 0; i < index; ++i) {
     node = node->next;
   }
 
   return node->data;
 }
 
-int List_Size(List *self)
-{
+int List_Size(List *self) {
   int count;
   struct node *tail;
 
@@ -77,24 +66,21 @@ int List_Size(List *self)
   return count;
 }
 
-void List_Append(List *self, void *item)
-{
+void List_Append(List *self, void *item) {
   struct node *node = calloc(1, sizeof(struct node));
 
   node->data = item;
   DL_APPEND(self->head, node);
 }
 
-void List_Prepend(List *self, void *item)
-{
+void List_Prepend(List *self, void *item) {
   struct node *node = calloc(1, sizeof(struct node));
 
   node->data = item;
   DL_PREPEND(self->head, node);
 }
 
-void List_Remove(List *self, void *item)
-{
+void List_Remove(List *self, void *item) {
   struct node *node;
   struct node like = {
       .data = item};
@@ -103,24 +89,20 @@ void List_Remove(List *self, void *item)
   DL_DELETE(self->head, node);
 }
 
-void List_ForEach(List *self, void (*it)(List *, int, void *))
-{
+void List_ForEach(List *self, void (*it)(List *, int, void *)) {
   struct node *node;
   int index = 0;
 
-  DL_FOREACH(self->head, node)
-  {
+  DL_FOREACH(self->head, node) {
     it(self, index++, node->data);
   }
 }
 
-void List_Sort(List *self, bool (*compareTo)(void *, void *))
-{
+void List_Sort(List *self, bool (*compareTo)(void *, void *)) {
   DL_SORT(self->head, compareTo);
 }
 
-char *List_ToString(List *self)
-{
+char *List_ToString(List *self) {
   struct node *node;
   int size = List_Size(self);
   int index = 0, count = 0;
@@ -128,8 +110,7 @@ char *List_ToString(List *self)
 
   count = sprintf(out, "[List(%p)=", self);
 
-  DL_FOREACH(self->head, node)
-  {
+  DL_FOREACH(self->head, node) {
     count += sprintf(out + count, "<[%d]%p>%s", index, node->data, (index != size - 1) ? "," : "");
     index++;
   }
@@ -139,14 +120,11 @@ char *List_ToString(List *self)
   return out;
 }
 
-void *List_FindFirst(List *self, void *user, bool (*callback)(void *, void *))
-{
+void *List_FindFirst(List *self, void *user, bool (*callback)(void *, void *)) {
   struct node *node;
 
-  DL_FOREACH(self->head, node)
-  {
-    if (callback(node->data, user))
-    {
+  DL_FOREACH(self->head, node) {
+    if (callback(node->data, user)) {
       return node->data;
     }
   }
