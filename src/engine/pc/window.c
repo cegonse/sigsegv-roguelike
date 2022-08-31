@@ -5,16 +5,15 @@
 #include <math.h>
 #include <raylib/include/raylib.h>
 #include <engine/log.h>
+#include <engine/input.h>
 #include <engine/texture_repository.h>
 #include <engine/resource_pack.h>
+#include <engine/pc/shader.h>
 #include <engine/window.h>
 
 static RenderTexture2D render_texture;
 static bool is_fullscreen = false;
-
-void Drawing_Init(int viewport_width, int viewport_height) {
-
-}
+static Shader filter_shader;
 
 static void logCallback(int logLevel, const char *text, va_list args) {
   char log[4096];
@@ -37,6 +36,20 @@ void Window_Open(struct window_settings settings) {
   ResourcePack_Init();
 
   render_texture = LoadRenderTexture(settings.width, settings.height);
+  SetTextureFilter(render_texture.texture, TEXTURE_FILTER_BILINEAR);
+
+  filter_shader = LoadShaderFromMemory(
+    Shader_GetScreenFilterVertexShader(),
+    Shader_GetScreenFilterFragmentShader()
+    );
+  int texels_per_pixel_uniform_location = GetShaderLocation(
+    filter_shader,
+    "texelsPerPixel"
+  );
+  int texture_size_uniform_location = GetShaderLocation(
+    filter_shader,
+    "texSize"
+  );
 
   BeginTextureMode(render_texture);
   ClearBackground(RAYWHITE);
@@ -65,6 +78,24 @@ void Window_Open(struct window_settings settings) {
 
     BeginDrawing();
     ClearBackground(BLACK);
+
+    float tex_size[2] = {
+      settings.width, settings.height
+    };
+
+    BeginShaderMode(filter_shader);
+    SetShaderValue(filter_shader,
+      texels_per_pixel_uniform_location,
+      &scale,
+      SHADER_UNIFORM_FLOAT
+    );
+    SetShaderValue(
+      filter_shader,
+      texture_size_uniform_location,
+      tex_size,
+      SHADER_UNIFORM_VEC2
+    );
+
     DrawTextureEx(
       render_texture.texture,
       (Vector2) {
@@ -75,6 +106,8 @@ void Window_Open(struct window_settings settings) {
       scale,
       RAYWHITE
     );
+    EndShaderMode();
+
     EndDrawing();
   }
 

@@ -51,6 +51,7 @@ if(PC_PLATFORM)
         src/engine/pc/file.c
         src/engine/pc/platform.c
         src/engine/pc/input.c
+        src/engine/pc/shader.c
     )
 endif()
 
