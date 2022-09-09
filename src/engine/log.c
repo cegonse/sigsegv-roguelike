@@ -18,14 +18,14 @@ static char *buildFormat(char *severity, char *fmt) {
   gettimeofday(&tv, NULL);
 
   sprintf(new_fmt,
-          "[%02d:%02d:%02d:%d %04d-%02d-%02d][%s] %s\n",
+          "[%04d-%02d-%02d %02d:%02d:%02d:%d][%s] %s\n",
+          tm->tm_year + 1900,
+          tm->tm_mon + 1,
+          tm->tm_mday,
           tm->tm_hour,
           tm->tm_min,
           tm->tm_sec,
           tv.tv_usec / 1000,
-          tm->tm_year + 1900,
-          tm->tm_mon + 1,
-          tm->tm_mday,
           severity,
           fmt);
 
@@ -61,7 +61,7 @@ void Log_Hex(void *data, size_t size) {
   char *new_format;
 
   sprintf(message, "Hex dump of %p (%zu bytes)", data, size);
-  new_format = buildFormat("HEX", message);
+  new_format = buildFormat("INFO", message);
   
   printf("%s", new_format);
 

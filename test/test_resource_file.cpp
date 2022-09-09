@@ -2,6 +2,7 @@
 
 extern "C" {
 #include <engine/resource_file.h>
+#include <engine/hashmap.h>
 }
 
 static void expectResourcePackTextureToContain(
@@ -41,6 +42,18 @@ describe("Resource file", []() {
       resource_pack->textures[1],
       "second", 4, 4, kRESOURCE_TEXTURE_FORMAT_RGB24, 48
     );
+
+    expect(resource_pack->objects).toBeNotNull();
+    std::string objectString = std::string((char *)Hashmap_Get(
+      resource_pack->objects[0],
+      (char *)"hello"
+    ));
+    float objectNumber = *((float *)Hashmap_Get(
+      resource_pack->objects[0],
+      (char *)"number"
+    ));
+    expect(objectString).toEqual("world");
+    expect(objectNumber).toEqual(1.0f);
 
     ResourceFile_Destroy(resource_pack);
   });

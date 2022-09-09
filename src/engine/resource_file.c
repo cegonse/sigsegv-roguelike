@@ -8,6 +8,19 @@
 
 #define kMAGIC_SIZE     7
 
+typedef enum {
+  kRESOURCE_OBJECT_TYPE_STRING = 0x01,
+  kRESOURCE_OBJECT_TYPE_NUMBER = 0x02,
+  kRESOURCE_OBJECT_TYPE_BOOLEAN = 0x03,
+  kRESOURCE_OBJECT_TYPE_OBJECT = 0x04,
+  kRESOURCE_OBJECT_TYPE_ARRAY = 0x05,
+} ResourceObjectType;
+
+typedef union {
+  float f;
+  uint32_t ul;
+} ResourcePackFloat;
+
 static bool verifyMagic(File *file) {
   char magic[kMAGIC_SIZE+1];
   
@@ -79,10 +92,59 @@ static void parseTextures(uint8_t *full_pack, struct resource_pack *resource_pac
   }
 }
 
+static void parseObjects(uint8_t *full_pack, struct resource_pack *resource_pack) {
+  uint32_t num_entries = 0;
+  uint32_t entry_type = 0;
+  uint32_t key_length = 0;
+  char *key = NULL;
+  
+  resource_pack->objects = calloc(
+    resource_pack->num_objects,
+    sizeof(Hashmap *)
+  );
+
+  for (int i=0; i<resource_pack->num_objects; ++i) {
+    resource_pack->objects[i] = Hashmap_Create();
+
+    num_entries = *((uint32_t *)full_pack);
+    full_pack += 2 * sizeof(uint32_t);
+
+    for (int j=0; j<num_entries; ++j) {
+      entry_type = *((uint32_t *)full_pack);
+      full_pack += sizeof(uint32_t);
+
+      key_length = *((uint32_t *)full_pack);
+      full_pack += sizeof(uint32_t);
+
+      key = calloc(key_length + 1, sizeof(char));
+      memcpy(key, full_pack, key_length);
+      full_pack += key_length;
+
+      if (entry_type == kRESOURCE_OBJECT_TYPE_STRING) {
+        char *string_value = NULL;
+        uint32_t string_value_length = 0;
+
+        string_value_length = *((uint32_t *)full_pack);
+        full_pack += sizeof(uint32_t);
+
+        string_value = calloc(string_value_length + 1, sizeof(char));
+        memcpy(string_value, full_pack, string_value_length);
+        full_pack += string_value_length;
+
+        Hashmap_Add(resource_pack->objects[i], key, string_value);
+        return;
+      } else if (entry_type == kRESOURCE_OBJECT_TYPE_NUMBER) {
+
+      }
+    }
+  }
+}
+
 struct resource_pack *ResourceFile_FromPath(char *path) {
   struct resource_pack *resource_pack = calloc(1, sizeof(struct resource_pack));
+  uint32_t texture_chunk_size = 0, object_chunk_size = 0;
   File *file = File_Open(path);
-  uint8_t *full_pack = NULL;
+  uint8_t *full_pack = NULL, *pack = NULL;
 
   if (file == NULL) {
     free(resource_pack);
@@ -96,10 +158,23 @@ struct resource_pack *ResourceFile_FromPath(char *path) {
   }
 
   full_pack = readFullPack(file);
-  resource_pack->num_textures = *((uint32_t *)full_pack);
-  resource_pack->num_objects = *((uint32_t *)(full_pack + sizeof(uint32_t)));
+  pack = full_pack;
+  
+  resource_pack->num_textures = *((uint32_t *)pack);
+  pack += sizeof(uint32_t);
+  
+  resource_pack->num_objects = *((uint32_t *)(pack));
+  pack += sizeof(uint32_t);
+  
+  texture_chunk_size = *((uint32_t *)(pack));
+  pack += sizeof(uint32_t);
 
-  parseTextures(full_pack + 2 * sizeof(uint32_t), resource_pack);
+  object_chunk_size = *((uint32_t *)(pack));
+  pack += sizeof(uint32_t);
+
+  parseTextures(pack, resource_pack);
+  pack += texture_chunk_size;
+  parseObjects(pack, resource_pack);
 
   Log_Info(
     "Loaded resource pack %s (textures=%d,objects=%d)",
