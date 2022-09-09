@@ -59,7 +59,7 @@ describe("Packing JSON object files", () => {
       "hello": 1.5
     }
     const buffer = jsonObject.encode(json)
-  
+
     expect([...buffer]).toEqual([
       0x01, 0x00, 0x00, 0x00,
       0x11, 0x00, 0x00, 0x00,
@@ -89,6 +89,32 @@ describe("Packing JSON object files", () => {
       0x77, 0x6F, 0x72, 0x6C, 0x64,
       0x03, 0x00, 0x00, 0x00,
       0x62, 0x79, 0x65
+    ])
+  })
+
+  // For each boolean entry
+  // 03 00 00 00 Entry type (BOOLEAN)
+  // XX XX XX XX Key length (LE UINT32)
+  // [XX]        Non-null terminated key string in ASCII
+  // XX Value (8 bit unsigned integer)
+  it("may include boolean values", () => {
+    const json = {
+      "false": false,
+      "true": true
+    }
+    const buffer = jsonObject.encode(json)
+
+    expect([...buffer]).toEqual([
+      0x02, 0x00, 0x00, 0x00,
+      0x1B, 0x00, 0x00, 0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x05, 0x00, 0x00, 0x00,
+      0x66, 0x61, 0x6C, 0x73, 0x65,
+      0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x04, 0x00, 0x00, 0x00,
+      0x74, 0x72, 0x75, 0x65,
+      0x01
     ])
   })
 })

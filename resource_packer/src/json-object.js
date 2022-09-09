@@ -2,7 +2,8 @@ const buffer = require("./buffer")
 
 const OBJECT_TYPES = {
   "string": buffer.uint32leBuffer(1),
-  "number": buffer.uint32leBuffer(2)
+  "number": buffer.uint32leBuffer(2),
+  "boolean": buffer.uint32leBuffer(3)
 }
 
 const encode = (object) => {
@@ -28,6 +29,15 @@ const encode = (object) => {
 
       items.push(Buffer.concat([
         OBJECT_TYPES.number,
+        buffer.uint32leBuffer(key.length),
+        keyBuffer,
+        valueBuffer
+      ]))
+    } else if (typeof(value) === "boolean") {
+      const valueBuffer = buffer.uint8Buffer(value)
+
+      items.push(Buffer.concat([
+        OBJECT_TYPES.boolean,
         buffer.uint32leBuffer(key.length),
         keyBuffer,
         valueBuffer
