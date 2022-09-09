@@ -97,13 +97,15 @@ struct resource_pack *ResourceFile_FromPath(char *path) {
 
   full_pack = readFullPack(file);
   resource_pack->num_textures = *((uint32_t *)full_pack);
+  resource_pack->num_objects = *((uint32_t *)(full_pack + sizeof(uint32_t)));
 
-  parseTextures(full_pack + sizeof(uint32_t), resource_pack);
+  parseTextures(full_pack + 2 * sizeof(uint32_t), resource_pack);
 
   Log_Info(
-    "Loaded resource pack %s (textures=%d)",
+    "Loaded resource pack %s (textures=%d,objects=%d)",
     path,
-    resource_pack->num_textures
+    resource_pack->num_textures,
+    resource_pack->num_objects
   );
 
   free(full_pack);

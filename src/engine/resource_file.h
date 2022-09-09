@@ -18,6 +18,7 @@ struct resource_pack_texture {
 
 struct resource_pack {
   int num_textures;
+  int num_objects;
   struct resource_pack_texture **textures;
 };
 

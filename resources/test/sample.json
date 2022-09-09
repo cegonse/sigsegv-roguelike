@@ -1,0 +1,9 @@
+{
+  "hello": "world",
+  "number": 1,
+  "boolean": false,
+  "potato": {
+    "yes": "please",
+    "a": [0, 0, 3, 3]
+  }
+}

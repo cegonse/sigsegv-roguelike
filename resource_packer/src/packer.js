@@ -59,6 +59,8 @@ const buildResourcePack = (textures, objects) => {
 
   chunks.push(buffer.uint32leBuffer(textureChunks.length))
   chunks.push(buffer.uint32leBuffer(objectChunks.length))
+  chunks.push(buffer.uint32leBuffer(Buffer.concat(textureChunks).length))
+  chunks.push(buffer.uint32leBuffer(Buffer.concat(objectChunks).length))
   textureChunks.forEach((chunk) => chunks.push(chunk))
   objectChunks.forEach((chunk) => chunks.push(chunk))
 

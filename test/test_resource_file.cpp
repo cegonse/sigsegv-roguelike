@@ -30,6 +30,7 @@ describe("Resource file", []() {
 
     expect(resource_pack).toBeNotNull();
     expect(resource_pack->num_textures).toEqual(2);
+    expect(resource_pack->num_objects).toEqual(1);
     expect(resource_pack->textures).toBeNotNull();
 
     expectResourcePackTextureToContain(
