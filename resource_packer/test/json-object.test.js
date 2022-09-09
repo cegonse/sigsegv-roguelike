@@ -11,7 +11,7 @@ describe("Packing JSON object files", () => {
   // [XX]        Non-null terminated value string in ASCII
   it("may include one string", () => {
     const json = {
-      "hello": "world"
+      hello: "world"
     }
     const buffer = jsonObject.encode(json)
   
@@ -28,8 +28,8 @@ describe("Packing JSON object files", () => {
 
   it("may include many strings", () => {
     const json = {
-      "first": "hello",
-      "second": "bye"
+      first: "hello",
+      second: "bye"
     }
     const buffer = jsonObject.encode(json)
   
@@ -56,7 +56,7 @@ describe("Packing JSON object files", () => {
   // XX XX XX XX Value (LE Float)
   it("may include numeric values", () => {
     const json = {
-      "hello": 1.5
+      hello: 1.5
     }
     const buffer = jsonObject.encode(json)
 
@@ -72,8 +72,8 @@ describe("Packing JSON object files", () => {
 
   it("may include numeric and string values", () => {
     const json = {
-      "hello": 2.1,
-      "world": "bye"
+      hello: 2.1,
+      world: "bye"
     }
     const buffer = jsonObject.encode(json)
   
@@ -99,8 +99,8 @@ describe("Packing JSON object files", () => {
   // XX Value (8 bit unsigned integer)
   it("may include boolean values", () => {
     const json = {
-      "false": false,
-      "true": true
+      false: false,
+      true: true
     }
     const buffer = jsonObject.encode(json)
 
@@ -115,6 +115,52 @@ describe("Packing JSON object files", () => {
       0x04, 0x00, 0x00, 0x00,
       0x74, 0x72, 0x75, 0x65,
       0x01
+    ])
+  })
+
+  // For each object entry
+  // 04 00 00 00 Entry type (OBJECT)
+  // XX XX XX XX Key length (LE UINT32)
+  // [XX]        Non-null terminated key string in ASCII
+  // XX XX XX XX Number of entries (LE UINT32)
+  // XX XX XX XX Object length (LE UINT32)
+  // Same attributes as first level objects
+  it("may include boolean values", () => {
+    const json = {
+      one: 2.1,
+      two: false,
+      three: {
+        yes: "no",
+        num: 2.1
+      }
+    }
+    const buffer = jsonObject.encode(json)
+
+    expect([...buffer]).toEqual([
+      0x03, 0x00, 0x00, 0x00,
+      0x50, 0x00, 0x00, 0x00,
+      0x02, 0x00, 0x00, 0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x6F, 0x6E, 0x65,
+      0x66, 0x66, 0x06, 0x40,
+      0x03, 0x00, 0x00, 0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x74, 0x77, 0x6F,
+      0x00,
+      0x04, 0x00, 0x00, 0x00,
+      0x05, 0x00, 0x00, 0x00,
+      0x74, 0x68, 0x72, 0x65, 0x65,
+      0x02, 0x00, 0x00, 0x00,
+      0x20, 0x00, 0x00, 0x00,
+      0x01, 0x00, 0x00, 0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x79, 0x65, 0x73,
+      0x02, 0x00, 0x00, 0x00,
+      0x6E, 0x6F,
+      0x02, 0x00, 0x00, 0x00,
+      0x03, 0x00, 0x00, 0x00,
+      0x6E, 0x75, 0x6D,
+      0x66, 0x66, 0x06, 0x40,
     ])
   })
 })
