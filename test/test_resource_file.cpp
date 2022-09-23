@@ -22,6 +22,42 @@ static void expectResourcePackTextureToContain(
   expect(packId).toEqual(id);
 }
 
+static void expectResourcePackToContainString(
+  struct resource_pack *resource_pack,
+  std::string key,
+  std::string value
+) {
+  std::string objectString = std::string((char *)Hashmap_Get(
+    resource_pack->objects[0],
+    (char *)key.c_str()
+  ));
+  expect(objectString).toEqual(value);
+}
+
+static void expectResourcePackToContainNumber(
+  struct resource_pack *resource_pack,
+  std::string key,
+  float value
+) {
+  float objectNumber = *((float *)Hashmap_Get(
+    resource_pack->objects[0],
+    (char *)key.c_str()
+  ));
+  expect(objectNumber).toEqual(value);
+}
+
+static void expectResourcePackToContainBoolean(
+  struct resource_pack *resource_pack,
+  std::string key,
+  bool value
+) {
+  bool objectBoolean = *((bool *)Hashmap_Get(
+    resource_pack->objects[0],
+    (char *)key.c_str()
+  ));
+  expect(objectBoolean).toEqual(value);
+}
+
 describe("Resource file", []() {
   it("can be loaded from a path", []() {
     struct resource_pack *resource_pack;
@@ -44,16 +80,10 @@ describe("Resource file", []() {
     );
 
     expect(resource_pack->objects).toBeNotNull();
-    std::string objectString = std::string((char *)Hashmap_Get(
-      resource_pack->objects[0],
-      (char *)"hello"
-    ));
-    float objectNumber = *((float *)Hashmap_Get(
-      resource_pack->objects[0],
-      (char *)"number"
-    ));
-    expect(objectString).toEqual("world");
-    expect(objectNumber).toEqual(1.0f);
+    
+    expectResourcePackToContainString(resource_pack, "string", "world");
+    expectResourcePackToContainNumber(resource_pack, "number", 1.0f);
+    expectResourcePackToContainBoolean(resource_pack, "boolean", false);
 
     ResourceFile_Destroy(resource_pack);
   });

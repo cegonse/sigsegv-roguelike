@@ -132,9 +132,22 @@ static void parseObjects(uint8_t *full_pack, struct resource_pack *resource_pack
         full_pack += string_value_length;
 
         Hashmap_Add(resource_pack->objects[i], key, string_value);
-        return;
       } else if (entry_type == kRESOURCE_OBJECT_TYPE_NUMBER) {
+        ResourcePackFloat *number_value = calloc(1, sizeof(ResourcePackFloat));
 
+        number_value->ul = *((uint32_t *)full_pack);
+        full_pack += sizeof(uint32_t);
+
+        Hashmap_Add(resource_pack->objects[i], key, number_value);
+      } else if (entry_type == kRESOURCE_OBJECT_TYPE_BOOLEAN) {
+        bool *boolean_value = calloc(1, sizeof(bool));
+        uint8_t integer_boolean = 0;
+
+        integer_boolean = *((uint8_t *)full_pack);
+        *boolean_value = (bool)integer_boolean;
+        full_pack += sizeof(uint8_t);
+
+        Hashmap_Add(resource_pack->objects[i], key, boolean_value);
       }
     }
   }
