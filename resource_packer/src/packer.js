@@ -1,4 +1,5 @@
 const fs = require("fs")
+const path = require("path")
 const texturePacker = require("./textures")
 const objectPacker = require("./json-object")
 const buffer = require("./buffer")
@@ -52,7 +53,8 @@ const buildResourcePack = (textures, objects) => {
   })
 
   objects.forEach((obj) => {
-    const objectData = objectPacker.encode(parseJsonFile(obj))
+    const objectName = path.basename(obj).split('.')[0];
+    const objectData = objectPacker.encode(parseJsonFile(obj), objectName);
     logger.log(`- Packing ${obj}`)
     objectChunks.push(objectData)
   })

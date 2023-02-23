@@ -3,9 +3,10 @@ const packer = require("../src/packer")
 // Pack header
 // 53 49 47 53 45 47 56   Magic (SIGSEGV)
 // XX XX XX XX            Pack size in bytes excluding header (little endian 32 bit unsigned int)
+// XX XX XX XX            Num textures (little endian 32 bit unsigned int)
+// XX XX XX XX            Num objects (little endian 32 bit unsigned int)
 // XX XX XX XX            Texture chunk size in bytes (little endian 32 bit unsigned int)
 // XX XX XX XX            Object chunk size in bytes (little endian 32 bit unsigned int)
-// XX XX XX XX            Num textures (little endian 32 bit unsigned int)
 //
 // For each texture resource
 // XX XX XX XX            Texture ID length (little endian 32 bit unsigned int)
@@ -15,6 +16,12 @@ const packer = require("../src/packer")
 // XX XX XX XX            Texture height in pixels (little endian 32 bit unsigned int)
 // XX XX XX XX            Texture data size (little endian 32 bit unsigned int)
 // [XX]                   Texture data, left to right, top to bottom
+//
+// For each object resource
+// XX XX XX XX            Object ID length (little endian 32 bit unsigned int)
+// [XX]                   Object ID in ASCII (not NULL terminated)
+// [XX]                   Object data
+
 
 describe("Resource packer", () => {
   it("packs a resource pack with zero textures and zero objects", () => {
@@ -65,13 +72,15 @@ describe("Resource packer", () => {
 
     expect([...result.buffer]).toEqual([
       0x53, 0x49, 0x47, 0x53, 0x45, 0x47, 0x56,
-      0x30, 0x00, 0x00, 0x00,
+      0x3A, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
       0x01, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
-      0x20, 0x00, 0x00, 0x00,
+      0x2A, 0x00, 0x00, 0x00,
+      0x22, 0x00, 0x00, 0x00,
       0x02, 0x00, 0x00, 0x00,
-      0x18, 0x00, 0x00, 0x00,
+      0x06, 0x00, 0x00, 0x00,
+      0x6F, 0x62, 0x6A, 0x65, 0x63, 0x74,
       0x01, 0x00, 0x00, 0x00,
       0x01, 0x00, 0x00, 0x00,
       0x61,

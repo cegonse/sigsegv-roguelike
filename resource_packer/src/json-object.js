@@ -85,7 +85,7 @@ const encodeObject = (object, items) => {
         logger.log('>> Encoding empty arrays not supported')
         return
       }
-      
+
       if (arrayType === "object") {
         logger.log('>> Encoding array of objects not supported')
         return
@@ -121,14 +121,20 @@ const encodeObject = (object, items) => {
   })
 }
 
-const encode = (object) => {
+const encode = (object, id) => {
   const items = []
   encodeObject(object, items)
+
   const itemsBuffer = Buffer.concat(items)
+  const idBuffer = Buffer.concat([
+    buffer.uint32leBuffer(id.length),
+    Buffer.from(id, 'ascii'),
+  ])
 
   return Buffer.concat([
+    buffer.uint32leBuffer(itemsBuffer.length + idBuffer.length),
     buffer.uint32leBuffer(items.length),
-    buffer.uint32leBuffer(itemsBuffer.length),
+    idBuffer,
     itemsBuffer
   ])
 }
