@@ -15,6 +15,7 @@ game: clean resources
 
 resources:
 	@mkdir -p build/resources
+	@cd ./resource_packer && npm install && cd ..
 	@$(NODE) ./resource_packer/main.js resources/default default
 	@mv default.pack ./build/resources
 
@@ -33,4 +34,4 @@ clean:
 	@rm -rf build
 	@rm -rf *.dSYM
 
-.PHONY: clean game start test-resource-packer resources
+.PHONY: clean game start test-resource-packer resources test
