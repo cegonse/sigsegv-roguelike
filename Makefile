@@ -11,7 +11,7 @@ all: test start
 
 game: clean resources
 	@mkdir -p build
-	@cd build && cmake -DPC_PLATFORM=True .. && make --no-print-directory && cd ..
+	@cd build && cmake -G Ninja -DPC_PLATFORM=True .. && cmake --build . -j8 && cd ..
 
 resources:
 	@mkdir -p build/resources
@@ -21,7 +21,7 @@ resources:
 
 test: clean
 	@mkdir -p build
-	@cd build && cmake -DTEST_PLATFORM=True .. && make --no-print-directory && cd ..
+	@cd build && cmake -G Ninja -DTEST_PLATFORM=True .. && cmake --build . -j8 && cd ..
 	@./scripts/run_tests.sh
 
 test-resource-packer:
