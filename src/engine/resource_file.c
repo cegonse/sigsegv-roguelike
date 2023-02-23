@@ -5,6 +5,7 @@
 #include <engine/file.h>
 #include <engine/log.h>
 #include <engine/resource_file.h>
+#include <engine/hashmap.h>
 
 #define kMAGIC_SIZE     7
 
@@ -23,7 +24,7 @@ typedef union {
 
 static bool verifyMagic(File *file) {
   char magic[kMAGIC_SIZE+1];
-  
+
   File_ReadBytes(file, kMAGIC_SIZE, magic);
   magic[kMAGIC_SIZE] = '\0';
 
@@ -33,7 +34,7 @@ static bool verifyMagic(File *file) {
 static uint8_t *readFullPack(File *file) {
   uint8_t *full_pack = NULL;
   uint32_t size = 0;
-  
+
   File_ReadBytes(file, sizeof(uint32_t), &size);
   full_pack = calloc(size, sizeof(uint8_t));
   File_ReadBytes(file, size, full_pack);
@@ -96,18 +97,25 @@ static void parseObjects(uint8_t *full_pack, struct resource_pack *resource_pack
   uint32_t num_entries = 0;
   uint32_t entry_type = 0;
   uint32_t key_length = 0;
+  uint32_t object_id_length = 0;
+  char *object_id = NULL;
   char *key = NULL;
-  
-  resource_pack->objects = calloc(
-    resource_pack->num_objects,
-    sizeof(Hashmap *)
-  );
+
+  resource_pack->objects = Hashmap_Create();
 
   for (int i=0; i<resource_pack->num_objects; ++i) {
-    resource_pack->objects[i] = Hashmap_Create();
+    Hashmap *object = Hashmap_Create();
 
+    full_pack += sizeof(uint32_t);
     num_entries = *((uint32_t *)full_pack);
-    full_pack += 2 * sizeof(uint32_t);
+    full_pack += sizeof(uint32_t);
+
+    object_id_length = *((uint32_t *)full_pack);
+    full_pack += sizeof(uint32_t);
+
+    object_id = calloc(object_id_length + 1, sizeof(char));
+    memcpy(object_id, full_pack, object_id_length);
+    full_pack += object_id_length;
 
     for (int j=0; j<num_entries; ++j) {
       entry_type = *((uint32_t *)full_pack);
@@ -131,14 +139,14 @@ static void parseObjects(uint8_t *full_pack, struct resource_pack *resource_pack
         memcpy(string_value, full_pack, string_value_length);
         full_pack += string_value_length;
 
-        Hashmap_Add(resource_pack->objects[i], key, string_value);
+        Hashmap_Add(object, key, string_value);
       } else if (entry_type == kRESOURCE_OBJECT_TYPE_NUMBER) {
         ResourcePackFloat *number_value = calloc(1, sizeof(ResourcePackFloat));
 
         number_value->ul = *((uint32_t *)full_pack);
         full_pack += sizeof(uint32_t);
 
-        Hashmap_Add(resource_pack->objects[i], key, number_value);
+        Hashmap_Add(object, key, number_value);
       } else if (entry_type == kRESOURCE_OBJECT_TYPE_BOOLEAN) {
         bool *boolean_value = calloc(1, sizeof(bool));
         uint8_t integer_boolean = 0;
@@ -147,9 +155,11 @@ static void parseObjects(uint8_t *full_pack, struct resource_pack *resource_pack
         *boolean_value = (bool)integer_boolean;
         full_pack += sizeof(uint8_t);
 
-        Hashmap_Add(resource_pack->objects[i], key, boolean_value);
+        Hashmap_Add(object, key, boolean_value);
       }
     }
+
+    Hashmap_Add(resource_pack->objects, object_id, object);
   }
 }
 
@@ -172,13 +182,13 @@ struct resource_pack *ResourceFile_FromPath(char *path) {
 
   full_pack = readFullPack(file);
   pack = full_pack;
-  
+
   resource_pack->num_textures = *((uint32_t *)pack);
   pack += sizeof(uint32_t);
-  
+
   resource_pack->num_objects = *((uint32_t *)(pack));
   pack += sizeof(uint32_t);
-  
+
   texture_chunk_size = *((uint32_t *)(pack));
   pack += sizeof(uint32_t);
 
@@ -202,12 +212,19 @@ struct resource_pack *ResourceFile_FromPath(char *path) {
   return resource_pack;
 }
 
+void destroyObject(Hashmap *self, void *user, char *key, void *value) {
+  free(value);
+}
+
 void ResourceFile_Destroy(struct resource_pack *self) {
   for (int i=0; i<self->num_textures; ++i) {
     free(self->textures[i]->data);
     free(self->textures[i]);
   }
 
+  Hashmap_Entries(self->objects, NULL, destroyObject);
+
+  Hashmap_Destroy(self->objects);
   free(self->textures);
   free(self);
 }
