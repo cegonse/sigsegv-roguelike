@@ -10,7 +10,7 @@ set(CORE_INCLUDES
 
 set(TEST_INCLUDES
     ${CORE_INCLUDES}
-    ${PROJECT_SOURCE_DIR}/vendor/cest/include
+    ${PROJECT_SOURCE_DIR}/vendor/cest/vendor
     ${PROJECT_SOURCE_DIR}/test
 )
 

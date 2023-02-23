@@ -1,3 +1,6 @@
 [submodule "vendor/uthash"]
 	path = vendor/uthash
 	url = git@github.com:cegonse/uthash.git
+[submodule "vendor/cest"]
+	path = vendor/cest
+	url = git@github.com:cegonse/cest.git
