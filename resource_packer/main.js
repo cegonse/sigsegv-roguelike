@@ -13,7 +13,7 @@ if (!directory) {
   process.exit(1);
 }
 
-if (!directory) {
+if (!packName) {
   console.log("No resource pack name specified")
   usage()
   process.exit(1);
