@@ -4,16 +4,44 @@
 #include <engine/texture_repository.h>
 #include <engine/drawing.h>
 
+static Camera3D mainCamera;
+
 static Color toRaylibColor(struct rgba8888_color color) {
   return (Color){
     color.r, color.g, color.b, color.a
   };
 }
 
+void Drawing_Draw3D(void (*draw)(float delta_time)) {
+  BeginMode3D(mainCamera);
+  draw(GetFrameTime());
+  EndMode3D();
+}
+
+void Drawing_DrawPlane(struct vec3 position) {
+  Vector2 size = { .x = 1.0f, .y = 1.0f };
+  DrawPlane((Vector3){ position.x, position.y, position.z }, size, RED);
+}
+
 void Drawing_ClearScreen(struct rgba8888_color color) {
-  BeginDrawing();
   ClearBackground(toRaylibColor(color));
-  EndDrawing();
+}
+
+void Drawing_DrawTexture(char *id, int x, int y) {
+  struct texture2d *texture = NULL;
+  Texture2D native;
+
+  texture = TextureRepository_GetById(id);
+  native = (Texture2D)(*(Texture2D *)texture->native_handle);
+  DrawTexture(native, x, y, RAYWHITE);
+}
+
+void Drawing_SetCameraOrtho(struct vec3 position, struct vec3 target, float orthographicSize) {
+  mainCamera.position = (Vector3){ position.x, position.y, position.z };
+  mainCamera.target = (Vector3){ target.x, target.y, target.z };
+  mainCamera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+  mainCamera.fovy = orthographicSize;
+  mainCamera.projection = CAMERA_ORTHOGRAPHIC;
 }
 
 struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture) {
@@ -46,13 +74,4 @@ struct texture2d *Drawing_LoadTexture(struct resource_pack_texture *pack_texture
   texture->native_handle = native_texture;
 
   return texture;
-}
-
-void Drawing_DrawTexture(char *id, int x, int y) {
-  struct texture2d *texture = NULL;
-  Texture2D native;
-
-  texture = TextureRepository_GetById(id);
-  native = (Texture2D)(*(Texture2D *)texture->native_handle);
-  DrawTexture(native, x, y, RAYWHITE);
 }

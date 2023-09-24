@@ -3,39 +3,27 @@
 #include <engine/input.h>
 #include <game/game.h>
 
-int x=0, y=0;
+static struct vec3 camera_position = { .x = 3.0f, .y = 3.0f, .z = 3.0f};
+static struct vec3 camera_target = { .x = 0.0f, .y = 0.0f, .z = 0.0f};
 
-void Game_Draw(void) {
+void Game_DrawGui(void) {
+  Drawing_DrawTexture("tileset", 0, 0);
+}
+
+void Game_Draw3d(float delta_time) {
   if (Input_GetKeyDown(kKEYCODE_F2)) {
     Window_ToggleFullscreen();
   }
 
-  if (Input_GetKey(kKEYCODE_ARROW_DOWN)) {
-    y--;
-  }
-  if (Input_GetKey(kKEYCODE_ARROW_UP)) {
-    y++;
-  }
-  if (Input_GetKey(kKEYCODE_ARROW_LEFT)) {
-    x--;
-  }
-  if (Input_GetKey(kKEYCODE_ARROW_RIGHT)) {
-    x++;
-  }
+  Drawing_ClearScreen((struct rgba8888_color){ 255, 255, 255, 255 });
 
-  Drawing_DrawTexture("wall", 0, 0);
-  Drawing_DrawTexture("wall", 320-64, 0);
-  Drawing_DrawTexture("wall", 0, 240-64);
-  Drawing_DrawTexture("wall", 320-64, 240-64);
+  Drawing_SetCameraOrtho(camera_position, camera_target, 4.0f);
+  camera_position.x += delta_time;
+  camera_target.x += delta_time;
+  camera_position.z += delta_time;
+  camera_target.z += delta_time;
 
-  Drawing_DrawTexture("wall", x, y);
-
-  Drawing_ClearScreen((struct rgba8888_color){
-    .r = 255,
-    .g = 255,
-    .b = 255,
-    .a = 255
-  });
+  Drawing_DrawPlane((struct vec3){ 0.0f, 0.0f, 0.0f });
 }
 
 void Game_Exit(void) {
@@ -47,7 +35,8 @@ void Game_Run(void) {
     .width = 320,
     .height = 240,
     .title = "Roguelike",
-    .onDraw = Game_Draw,
+    .onDrawGui = Game_DrawGui,
+    .onDraw3d = Game_Draw3d,
     .onExit = Game_Exit
   });
 }

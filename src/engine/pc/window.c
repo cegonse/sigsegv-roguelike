@@ -9,6 +9,7 @@
 #include <engine/texture_repository.h>
 #include <engine/resource_pack.h>
 #include <engine/pc/shader.h>
+#include <engine/drawing.h>
 #include <engine/window.h>
 
 static RenderTexture2D render_texture;
@@ -73,8 +74,11 @@ void Window_Open(struct window_settings settings) {
     }
 
     BeginTextureMode(render_texture);
-    settings.onDraw();
+    BeginDrawing();
+    Drawing_Draw3D(settings.onDraw3d);
+    settings.onDrawGui();
     EndTextureMode();
+    EndDrawing();
 
     BeginDrawing();
     ClearBackground(BLACK);

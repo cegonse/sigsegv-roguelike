@@ -5,7 +5,8 @@ struct window_settings {
   int height;
   char *title;
 
-  void (*onDraw)(void);
+  void (*onDrawGui)(void);
+  void (*onDraw3d)(float delta_time);
   void (*onExit)(void);
 };
 
